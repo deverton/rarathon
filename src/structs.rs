@@ -28,3 +28,8 @@ pub struct Tasks {
     pub tasks: Vec<Task>,
 }
 
+#[derive(RustcDecodable, RustcEncodable, Debug)]
+pub struct Leader {
+    pub leader: String,
+}
+

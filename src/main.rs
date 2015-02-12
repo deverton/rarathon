@@ -5,6 +5,10 @@ extern crate rarathon;
 use getopts::{Options, ParsingStyle};
 use std::env;
 
+fn leader(client: rarathon::Client) {
+    println!("{:?}", client.leader());
+}
+
 fn list_applications(client: rarathon::Client) {
     println!("Would list");
 }
@@ -61,6 +65,7 @@ fn main() {
     let command = free_args.remove(0);
 
     match &command[] {
+        "leader"     => leader(client),
         "list"       => list_applications(client),
         "list_tasks" => list_tasks(client, matches.free),
         command      => print_usage(&format!("Unknown command {}\n", command)[], opts),
