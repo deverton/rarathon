@@ -1,12 +1,14 @@
-#![feature(collections, env, os)]
+#![feature(collections, env)]
 extern crate getopts;
 extern crate rarathon;
+extern crate "rustc-serialize" as rustc_serialize;
 
 use getopts::{Options, ParsingStyle};
+use rustc_serialize::json;
 use std::env;
 
 fn leader(client: rarathon::Client) {
-    println!("{:?}", client.leader());
+    println!("{}", json::encode(&client.leader()).unwrap());
 }
 
 fn list_applications(client: rarathon::Client) {
@@ -24,7 +26,7 @@ fn list_tasks(client: rarathon::Client, args: Vec<String>) {
 
     let id = matches.opt_str("id").expect("id specified");
 
-    println!("Would fetch tasks for ID {:?}", client.list_tasks(id));
+    println!("{}", json::encode(&client.list_tasks(id)).unwrap());
 }
 
 fn print_usage(msg: &str, opts: Options) {
