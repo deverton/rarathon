@@ -3,16 +3,17 @@ name = "rarathon"
 version = "0.0.1"
 authors = [ "Dan Everton <dan@iocaine.org>" ]
 
-[[bin]]
+[lib]
 name = "rarathon"
+
+[[bin]]
+name = "marathon_client"
+test = false
+doc = false
 
 [dependencies]
 getopts = "*"
+hyper = "*"
 rustc-serialize = "*"
-
-[dependencies.hyper]
-git = "https://github.com/hyperium/hyper.git"
-
-[dependencies.url]
-git = "https://github.com/servo/rust-url"
+url = "*"
 

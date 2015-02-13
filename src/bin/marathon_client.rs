@@ -42,7 +42,7 @@ fn main() {
 
     let mut args = env::args().collect::<Vec<_>>();
 
-    let program = args.remove(0).into_string();
+    let program = args.remove(0);
 
     let matches = match opts.parse(args) {
         Ok(m)  => m,
