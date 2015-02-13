@@ -1,5 +1,5 @@
 use hyper::client::Client as HttpClient;
-use hyper::header::{qitem, Accept, ContentType};
+use hyper::header::{qitem, Accept, Authorization, Basic, ContentType, Headers};
 use hyper::mime::Mime;
 use hyper::mime::TopLevel::Application;
 use hyper::mime::SubLevel::Json;
@@ -11,17 +11,25 @@ use url::{Url, UrlParser};
 
 pub struct Client {
     base_url: Url,
-    username: Option<String>,
-    password: Option<String>,
+    headers: Headers,
 }
 
 impl Client {
 
     pub fn new(url: String, username: Option<String>, password: Option<String>) -> Client {
+        let mut headers = Headers::new();
+
+        // All JSON all the time
+        headers.set(Accept(vec![qitem(Mime(Application, Json, vec![]))]));
+        headers.set(ContentType(Mime(Application, Json, vec![])));
+
+        if username.is_some() {
+            headers.set(Authorization(Basic { username: username.unwrap(), password: password }));
+        }
+
         Client{
             base_url: Url::parse(&url).unwrap(),
-            username: username,
-            password: password
+            headers: headers,
         }
     }
 
@@ -43,8 +51,7 @@ impl Client {
 
         let response = client
             .request(method.parse::<Method>().unwrap(), &url.to_string()[])
-            .header(Accept(vec![qitem(Mime(Application, Json, vec![]))]))
-            .header(ContentType(Mime(Application, Json, vec![])))
+            .headers(self.headers)
             .send();
 
         json::decode(&response.unwrap().read_to_string().unwrap()[]).unwrap()
