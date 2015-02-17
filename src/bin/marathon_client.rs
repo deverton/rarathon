@@ -8,11 +8,34 @@ use rustc_serialize::json;
 use std::env;
 
 fn leader(client: rarathon::Client) {
-    println!("{}", json::encode(&client.leader()).unwrap());
+    let result = client.leader();
+    println!("{}", result.leader);
 }
 
-fn list_applications(client: rarathon::Client) {
-    println!("Would list");
+fn list_apps(client: rarathon::Client) {
+    let apps = client.list_apps().apps;
+    match &apps[] {
+        [] => println!("{}", "No apps currently running."),
+        _  => {
+            for app in apps {
+                println!("App ID:     {}", app.id);
+                println!("Command:    {}", app.cmd.unwrap_or(String::new()));
+                println!("Instances:  {}", app.instances);
+                println!("CPUs:       {}", app.cpus);
+                println!("Memory:     {}", app.mem);
+                for uri in app.uris {
+                    println!("URI:        {}", uri);
+                };
+                for (k, v) in app.env {
+                    println!("ENV:        {}={}", k, v);
+                };
+                for constraint in app.constraints {
+                    println!("Constraint: {}", json::encode(&constraint).unwrap());
+                };
+                println!("");
+            }
+        }
+    }
 }
 
 fn list_tasks(client: rarathon::Client, args: Vec<String>) {
@@ -26,11 +49,13 @@ fn list_tasks(client: rarathon::Client, args: Vec<String>) {
 
     let id = matches.opt_str("id").expect("id specified");
 
-    println!("{}", json::encode(&client.list_tasks(id)).unwrap());
+    let tasks = client.list_tasks(id);
+
+    println!("{}", json::encode(&tasks).unwrap());
 }
 
-fn print_usage(msg: &str, opts: Options) {
-    let brief = "Usage: rarathon [global options] [command] [options]";
+fn print_usage(program: &str, msg: &str, opts: Options) {
+    let brief = format!("Usage: {} [global options] [command] [options]", program);
     env::set_exit_status(-1);
     println!("{}\n{}", msg, opts.usage(brief.as_slice()));
 }
@@ -60,7 +85,7 @@ fn main() {
     let mut free_args = matches.free.clone();
 
     if free_args.is_empty() {
-        print_usage("No command specified", opts);
+        print_usage(&program, "No command specified", opts);
         return;
     }
 
@@ -68,9 +93,9 @@ fn main() {
 
     match &command[] {
         "leader"     => leader(client),
-        "list"       => list_applications(client),
+        "list"       => list_apps(client),
         "list_tasks" => list_tasks(client, matches.free),
-        command      => print_usage(&format!("Unknown command {}\n", command)[], opts),
+        command      => print_usage(&program, &format!("Unknown command {}\n", command)[], opts),
     }
 
 }

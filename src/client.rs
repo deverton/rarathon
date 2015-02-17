@@ -6,7 +6,7 @@ use hyper::mime::SubLevel::Json;
 use hyper::method::Method;
 use rustc_serialize::Decodable;
 use rustc_serialize::json;
-use structs::{Leader, Tasks};
+use {Apps, Leader, Tasks};
 use url::{Url, UrlParser};
 
 pub struct Client {
@@ -35,6 +35,10 @@ impl Client {
 
     pub fn leader(self) -> Leader {
         self.request("GET", "/v2/leader")
+    }
+
+    pub fn list_apps(self) -> Apps {
+        self.request("GET", "/v2/apps")
     }
 
     pub fn list_tasks(self, id: String) -> Tasks {
