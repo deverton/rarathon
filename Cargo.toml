@@ -1,6 +1,6 @@
 [package]
 name = "rarathon"
-version = "0.0.1"
+version = "0.0.2"
 description = "Client library and command utility to interact with Mesosphere Marathon."
 readme = "README.md"
 license = "MIT"
