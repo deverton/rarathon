@@ -1,4 +1,4 @@
-#![feature(io)]
+#![feature(old_io)]
 #![cfg_attr(test, feature(test))]
 
 extern crate hyper;

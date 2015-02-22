@@ -54,11 +54,11 @@ impl Client {
             .unwrap();
 
         let response = client
-            .request(method.parse::<Method>().unwrap(), &url.to_string()[])
+            .request(method.parse::<Method>().unwrap(), &url.to_string()[..])
             .headers(self.headers)
             .send();
 
-        json::decode(&response.unwrap().read_to_string().unwrap()[]).unwrap()
+        json::decode(&response.unwrap().read_to_string().unwrap()[..]).unwrap()
     }
 
 }

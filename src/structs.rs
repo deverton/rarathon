@@ -237,7 +237,7 @@ mod tests {
     fn test_encode_container_info() {
         let c = ContainerInfo{container_type: "DOCKER".to_string(), volumes: vec![], hostname: None, docker: None};
         let r = json::encode(&c).unwrap();
-        assert_eq!(&r[], r##"{"type":"DOCKER","volumes":[],"hostname":null,"docker":null}"##);
+        assert_eq!(&r[..], r##"{"type":"DOCKER","volumes":[],"hostname":null,"docker":null}"##);
     }
 
     #[test]
@@ -262,14 +262,14 @@ mod tests {
     fn test_encode_constraints_2() {
         let c = Constraint{field: "hostname".to_string(), operator: ConstraintOperator::UNIQUE, value: None};
         let r = json::encode(&c).unwrap();
-        assert_eq!(&r[], "[\"hostname\",\"UNIQUE\"]");
+        assert_eq!(&r[..], "[\"hostname\",\"UNIQUE\"]");
     }
 
     #[test]
     fn test_encode_constraints_3() {
         let c = Constraint{field: "attribute".to_string(), operator: ConstraintOperator::CLUSTER, value: Some("value".to_string())};
         let r = json::encode(&c).unwrap();
-        assert_eq!(&r[], "[\"attribute\",\"CLUSTER\",\"value\"]");
+        assert_eq!(&r[..], "[\"attribute\",\"CLUSTER\",\"value\"]");
     }
 
 }

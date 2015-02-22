@@ -14,7 +14,7 @@ fn leader(client: rarathon::Client) {
 
 fn list_apps(client: rarathon::Client) {
     let apps = client.list_apps().apps;
-    match &apps[] {
+    match &apps[..] {
         [] => println!("{}", "No apps currently running."),
         _  => {
             for app in apps {
@@ -91,11 +91,11 @@ fn main() {
 
     let command = free_args.remove(0);
 
-    match &command[] {
+    match &command[..] {
         "leader"     => leader(client),
         "list"       => list_apps(client),
         "list_tasks" => list_tasks(client, matches.free),
-        command      => print_usage(&program, &format!("Unknown command {}\n", command)[], opts),
+        command      => print_usage(&program, &format!("Unknown command {}\n", command)[..], opts),
     }
 
 }
