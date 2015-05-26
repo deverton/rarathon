@@ -5,7 +5,7 @@ use std::collections::HashMap;
 // Mesos types
 
 #[derive(RustcDecodable, RustcEncodable, PartialEq, Eq, Debug)]
-enum VolumeMode {
+pub enum VolumeMode {
     RW,
     RO
 }
@@ -24,7 +24,7 @@ enum ContainerType {
 }
 
 #[derive(RustcDecodable, RustcEncodable, PartialEq, Eq, Debug)]
-enum DockerNetwork {
+pub enum DockerNetwork {
     HOST,
     BRIDGE,
     NONE
@@ -88,7 +88,7 @@ impl Encodable for ContainerInfo {
 // Marathon types
 
 #[derive(RustcDecodable, RustcEncodable, PartialEq, Eq, Debug)]
-enum ConstraintOperator {
+pub enum ConstraintOperator {
     UNIQUE,
     LIKE,
     CLUSTER,
@@ -134,7 +134,7 @@ impl Encodable for Constraint {
 }
 
 #[derive(RustcDecodable, RustcEncodable, PartialEq, Eq, Debug)]
-enum HealthCheckProtocol {
+pub enum HealthCheckProtocol {
     HTTP,
     TCP,
     COMMAND,

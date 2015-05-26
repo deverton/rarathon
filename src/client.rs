@@ -8,6 +8,7 @@ use rustc_serialize::Decodable;
 use rustc_serialize::json;
 use {Apps, Leader, Tasks};
 use url::{Url, UrlParser};
+use std::io::Read;
 
 pub struct Client {
     base_url: Url,
@@ -53,12 +54,15 @@ impl Client {
             .parse(path)
             .unwrap();
 
-        let response = client
+        let mut response = client
             .request(method.parse::<Method>().unwrap(), &url.to_string()[..])
             .headers(self.headers)
-            .send();
+            .send()
+            .unwrap();
 
-        json::decode(&response.unwrap().read_to_string().unwrap()[..]).unwrap()
+        let mut s = String::new();
+        response.read_to_string(&mut s).unwrap();
+        return json::decode::<T>(&s).unwrap();
     }
 
 }

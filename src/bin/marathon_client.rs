@@ -1,7 +1,6 @@
-#![feature(collections, env)]
 extern crate getopts;
 extern crate rarathon;
-extern crate "rustc-serialize" as rustc_serialize;
+extern crate rustc_serialize;
 
 use getopts::{Options, ParsingStyle};
 use rustc_serialize::json;
@@ -14,26 +13,25 @@ fn leader(client: rarathon::Client) {
 
 fn list_apps(client: rarathon::Client) {
     let apps = client.list_apps().apps;
-    match &apps[..] {
-        [] => println!("{}", "No apps currently running."),
-        _  => {
-            for app in apps {
-                println!("App ID:     {}", app.id);
-                println!("Command:    {}", app.cmd.unwrap_or(String::new()));
-                println!("Instances:  {}", app.instances);
-                println!("CPUs:       {}", app.cpus);
-                println!("Memory:     {}", app.mem);
-                for uri in app.uris {
-                    println!("URI:        {}", uri);
-                };
-                for (k, v) in app.env {
-                    println!("ENV:        {}={}", k, v);
-                };
-                for constraint in app.constraints {
-                    println!("Constraint: {}", json::encode(&constraint).unwrap());
-                };
-                println!("");
-            }
+    if apps.is_empty() {
+        println!("{}", "No apps currently running.");
+    } else {
+        for app in apps {
+            println!("App ID:     {}", app.id);
+            println!("Command:    {}", app.cmd.unwrap_or(String::new()));
+            println!("Instances:  {}", app.instances);
+            println!("CPUs:       {}", app.cpus);
+            println!("Memory:     {}", app.mem);
+            for uri in app.uris {
+                println!("URI:        {}", uri);
+            };
+            for (k, v) in app.env {
+                println!("ENV:        {}={}", k, v);
+            };
+            for constraint in app.constraints {
+                println!("Constraint: {}", json::encode(&constraint).unwrap());
+            };
+            println!("");
         }
     }
 }
@@ -56,8 +54,7 @@ fn list_tasks(client: rarathon::Client, args: Vec<String>) {
 
 fn print_usage(program: &str, msg: &str, opts: Options) {
     let brief = format!("Usage: {} [global options] [command] [options]", program);
-    env::set_exit_status(-1);
-    println!("{}\n{}", msg, opts.usage(brief.as_slice()));
+    println!("{}\n{}", msg, opts.usage(&brief));
 }
 
 fn main() {
@@ -76,7 +73,7 @@ fn main() {
         Err(f) => panic!(f.to_string()),
     };
 
-    let host = matches.opt_str("host").unwrap_or(String::from_str("http://localhost:8080"));
+    let host = matches.opt_str("host").unwrap_or("http://localhost:8080".to_string());
     let username = matches.opt_str("username");
     let password = matches.opt_str("password");
 
@@ -85,8 +82,7 @@ fn main() {
     let mut free_args = matches.free.clone();
 
     if free_args.is_empty() {
-        print_usage(&program, "No command specified", opts);
-        return;
+        return print_usage(&program, "No command specified", opts);
     }
 
     let command = free_args.remove(0);
@@ -97,6 +93,5 @@ fn main() {
         "list_tasks" => list_tasks(client, matches.free),
         command      => print_usage(&program, &format!("Unknown command {}\n", command)[..], opts),
     }
-
 }
 

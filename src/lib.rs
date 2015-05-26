@@ -1,9 +1,8 @@
-#![feature(old_io)]
 #![cfg_attr(test, feature(test))]
 
 extern crate hyper;
 #[cfg(test)] extern crate test;
-extern crate "rustc-serialize" as rustc_serialize;
+extern crate rustc_serialize;
 extern crate url;
 
 pub use self::client::Client;
