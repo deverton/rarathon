@@ -1,7 +1,4 @@
-#![cfg_attr(test, feature(test))]
-
 extern crate hyper;
-#[cfg(test)] extern crate test;
 extern crate rustc_serialize;
 extern crate url;
 

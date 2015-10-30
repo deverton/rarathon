@@ -219,7 +219,6 @@ pub struct MarathonTask {
 #[cfg(test)]
 mod tests {
 
-    extern crate test;
     use rustc_serialize::json;
     use super::{Constraint, ConstraintOperator, ContainerInfo};
 

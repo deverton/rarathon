@@ -47,7 +47,7 @@ impl Client {
     }
 
     fn request<T: Decodable>(self, method: &str, path: &str) -> T {
-        let mut client = HttpClient::new();
+        let client = HttpClient::new();
 
         let url = UrlParser::new()
             .base_url(&self.base_url)
