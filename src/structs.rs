@@ -213,7 +213,7 @@ pub struct MarathonTask {
     pub startedAt: Option<String>,
     pub version: Option<String>,
     pub servicePorts: Option<Vec<u32>>,
-    pub healthCheckResults: Vec<HealthCheckResult>,
+    pub healthCheckResults: Option<Vec<HealthCheckResult>>,
 }
 
 #[cfg(test)]
